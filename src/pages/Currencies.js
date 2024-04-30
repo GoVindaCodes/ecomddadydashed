@@ -183,7 +183,7 @@ const Currencies = () => {
                   </tr>
                 </TableHeader>
                 <CurrencyTable
-                  data={data}
+                  // data={data}
                   // currency={data}
                   currency={dataTable}
                   isCheck={isCheck}

@@ -388,18 +388,83 @@ const useFilter = (data) => {
   const resultsPerPage = 10;
   const totalResults = serviceData?.length;
   const handleChangePage = (p) => {
-    // console.log('Changing page to:', p);
+    console.log('Changing page to:', p);
     setCurrentPage(p);
   };
-  useEffect(() => {
-    setDataTable(
-      serviceData?.slice(
-        (currentPage - 1) * resultsPerPage,
-        currentPage * resultsPerPage
-      )
-    );
-  }, [serviceData, currentPage, resultsPerPage]);
+  // useEffect(() => {
+  //   setDataTable(
+  //     serviceData?.slice(
+  //       (currentPage - 1) * resultsPerPage,
+  //       currentPage * resultsPerPage
+  //     )
+  //   );
+  // }, [serviceData, currentPage, resultsPerPage]);
   //pagination functionality end
+
+  // useEffect(() => {
+  //   let slicedData;
+  //   if (serviceData?.length > 0 && !searchText) { // Only slice when not searching
+  //     const startIndex = (currentPage - 1) * resultsPerPage;
+  //     const endIndex = Math.min(currentPage * resultsPerPage, serviceData.length);
+  //     slicedData = serviceData.slice(startIndex, endIndex);
+  //   } else {
+  //     slicedData = serviceData; // Keep the data as is if it's empty or when searching
+  //   }
+  //   setDataTable(slicedData);
+  // }, [serviceData, currentPage, resultsPerPage, searchText]);
+  useEffect(() => {
+    let slicedData;
+    if (serviceData?.length > 0) {
+      const startIndex = (currentPage - 1) * resultsPerPage;
+      const endIndex = Math.min(currentPage * resultsPerPage, serviceData.length);
+      slicedData = serviceData.slice(startIndex, endIndex);
+    } else {
+      slicedData = serviceData; // Keep the data as is if it's empty
+    }
+
+    // Check if any filters or searches are active
+    const filtersActive =
+      filter ||
+      sortedField ||
+      attributeTitle ||
+      categoryType ||
+      role ||
+      searchUser ||
+      searchCoupon ||
+      status ||
+      searchOrder ||
+      country ||
+      shipping ||
+      language ||
+      currency;
+
+    if (filtersActive || searchText) {
+      // If any filter (except product search) or search is active, don't apply slicing
+      setDataTable(serviceData);
+    } else {
+      // If no filters or searches are active, apply slicing
+      setDataTable(slicedData);
+    }
+  }, [
+    serviceData,
+    currentPage,
+    resultsPerPage,
+    filter,
+    sortedField,
+    searchText,
+    attributeTitle,
+    categoryType,
+    role,
+    searchUser,
+    searchCoupon,
+    status,
+    searchOrder,
+    country,
+    shipping,
+    language,
+    currency,
+  ]);
+
   //table form submit function for search start
   const handleSubmitForAll = (e) => {
     console.log("hi: ", searchRef.current.value)
